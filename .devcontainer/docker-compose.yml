@@ -1,0 +1,24 @@
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/javascript-node:22
+    volumes:
+      # Workspace
+      - ..:/workspaces/childroutine-company:cached
+
+      # Paperclip data — persists database, agent workspaces, storage, secrets
+      - paperclip-data:/home/node/.paperclip
+
+      # Claude Code config and auth
+      - ${HOME}/.claude:/home/node/.claude:cached
+      - ${HOME}/.claude.json:/home/node/.claude.json:cached
+
+      # SSH keys for git (read-only)
+      - ${HOME}/.ssh:/home/node/.ssh:ro
+    env_file:
+      - ../.env.secrets
+    environment:
+      - PAPERCLIP_HOME=/home/node/.paperclip
+    command: sleep infinity
+
+volumes:
+  paperclip-data:

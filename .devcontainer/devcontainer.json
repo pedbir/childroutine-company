@@ -1,6 +1,8 @@
 {
   "name": "PaperclipAI",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspaces/childroutine-company",
   "customizations": {
     "vscode": {
       "settings": {
@@ -11,14 +13,5 @@
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:latest": {}
   },
-  "runArgs": [
-    "--env-file", "${localWorkspaceFolder}/.env.secrets"
-  ],
-  "mounts": [
-    "source=${localEnv:HOME}/.claude,target=/home/node/.claude,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.claude.json,target=/home/node/.claude.json,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,readonly",
-    "source=${localEnv:HOME}/.paperclip,target=/home/node/.paperclip,type=bind,consistency=cached"
-  ],
   "postCreateCommand": "npx paperclipai onboard --yes && bash .devcontainer/sync-agents.sh"
 }
