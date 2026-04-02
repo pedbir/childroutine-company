@@ -1,0 +1,8 @@
+{
+  "companyId": "d447e052-1c5c-40f8-af99-c767cc8885da",
+  "agents": {
+    "ceo": "30c780b4-f591-42aa-aa5d-797f3eb9cc17",
+    "engineer": "bfb905ba-d6f8-4763-8d84-ec9ee5332e6c",
+    "sre": "2caccd56-bbdd-4231-b261-b18345a687e2"
+  }
+}
