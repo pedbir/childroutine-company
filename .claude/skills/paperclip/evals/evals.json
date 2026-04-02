@@ -1,0 +1,23 @@
+{
+  "skill_name": "paperclip",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I just cloned the Paperclip repo. How do I get it running locally and create my first AI company with a Claude agent as CEO?",
+      "expected_output": "Step-by-step instructions covering installation, startup, health check, company creation, and CEO agent setup with claude_local adapter config.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "My Paperclip instance is running in local_trusted mode but I need to deploy it for my team on our Tailscale network. Walk me through the migration — I also need to set up proper secrets management.",
+      "expected_output": "Migration from local_trusted to authenticated+private mode, Tailscale hostname setup, secrets management config, and board claim flow.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I want to use the Paperclip CLI to create a few issues, assign them to my engineering agent, and then trigger a heartbeat. Show me the exact CLI commands I need.",
+      "expected_output": "Concrete CLI commands for issue creation, assignment, and heartbeat triggering, including proper flags and arguments.",
+      "files": []
+    }
+  ]
+}

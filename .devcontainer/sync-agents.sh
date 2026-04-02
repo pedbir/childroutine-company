@@ -29,7 +29,19 @@ for AGENT_NAME in $(jq -r '.agents | keys[]' "$MAP_FILE"); do
   # Create the target directory if Paperclip hasn't created it yet
   mkdir -p "$DEST_DIR"
 
+  # Remove stale symlinks — files that were deleted from git but still
+  # exist as symlinks in Paperclip's directory
+  for EXISTING in "$DEST_DIR"/*; do
+    [ -L "$EXISTING" ] || continue
+    LINK_TARGET=$(readlink "$EXISTING")
+    if [[ "$LINK_TARGET" == "$SRC_DIR/"* ]] && [ ! -e "$LINK_TARGET" ]; then
+      rm "$EXISTING"
+      echo "  removed stale link $(basename "$EXISTING") for $AGENT_NAME"
+    fi
+  done
+
   for FILE in "$SRC_DIR"/*; do
+    [ -f "$FILE" ] || continue
     FILENAME=$(basename "$FILE")
     DEST_FILE="$DEST_DIR/$FILENAME"
 

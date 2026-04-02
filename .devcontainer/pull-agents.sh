@@ -43,9 +43,14 @@ done
 
 CHANGES=0
 
+# Track which agent IDs are still present in Paperclip
+declare -A LIVE_AGENTS
+
 for AGENT_ID_DIR in "$AGENTS_DIR"/*/; do
+  [ -d "$AGENT_ID_DIR" ] || continue
   AGENT_ID=$(basename "$AGENT_ID_DIR")
   INSTRUCTIONS_DIR="$AGENT_ID_DIR/instructions"
+  LIVE_AGENTS[$AGENT_ID]=1
 
   [ -d "$INSTRUCTIONS_DIR" ] || continue
 
@@ -56,7 +61,6 @@ for AGENT_ID_DIR in "$AGENTS_DIR"/*/; do
     # Try to extract role from first line of AGENTS.md
     if [ -f "$INSTRUCTIONS_DIR/AGENTS.md" ]; then
       ROLE=$(head -1 "$INSTRUCTIONS_DIR/AGENTS.md" | sed 's/^You are the //' | sed 's/[.!].*$//' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
-      # Fallback to agent ID prefix if extraction fails
       AGENT_NAME="${ROLE:-agent-${AGENT_ID:0:8}}"
     else
       AGENT_NAME="agent-${AGENT_ID:0:8}"
@@ -72,10 +76,8 @@ for AGENT_ID_DIR in "$AGENTS_DIR"/*/; do
     FILENAME=$(basename "$FILE")
     DEST_FILE="$DEST_DIR/$FILENAME"
 
-    # If it's a symlink pointing back to our repo, read the actual content from Paperclip
-    # (symlinks mean we already manage this file — check if source changed)
+    # If it's a symlink pointing back to our repo, skip — already managed
     if [ -L "$FILE" ]; then
-      # Symlink points to our repo — file is already managed, skip
       continue
     fi
 
@@ -95,6 +97,20 @@ for AGENT_ID_DIR in "$AGENTS_DIR"/*/; do
 
   # Update the map with this agent
   EXISTING_MAP=$(echo "$EXISTING_MAP" | jq --arg name "$AGENT_NAME" --arg id "$AGENT_ID" '.agents[$name] = $id')
+done
+
+# --- Clean up terminated agents ---
+# Remove map entries for agents that no longer exist in Paperclip
+for AGENT_ID in "${!ID_TO_NAME[@]}"; do
+  if [ -z "${LIVE_AGENTS[$AGENT_ID]:-}" ]; then
+    AGENT_NAME="${ID_TO_NAME[$AGENT_ID]}"
+    echo "  REMOVED $AGENT_NAME ($AGENT_ID) — no longer in Paperclip"
+    EXISTING_MAP=$(echo "$EXISTING_MAP" | jq --arg name "$AGENT_NAME" 'del(.agents[$name])')
+    CHANGES=$((CHANGES + 1))
+    # Leave the repo directory intact so the history is preserved in git;
+    # the user can delete it manually after reviewing.
+    echo "    (directory agents/$AGENT_NAME/ kept — delete manually if not needed)"
+  fi
 done
 
 # Write updated map
