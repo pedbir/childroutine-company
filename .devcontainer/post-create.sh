@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # post-create.sh — devcontainer postCreateCommand
-# Onboards Paperclip (config + migrations), syncs agent instructions,
-# then starts the server in the background so the command can exit.
+# Onboards Paperclip (config + migrations), imports the company and agents
+# from the exported package, then symlinks git-managed instructions.
 set -euo pipefail
 
 sudo chown -R node:node /home/node/.paperclip
@@ -23,7 +23,7 @@ for i in $(seq 1 120); do
   sleep 1
 done
 
-# Sync agent instructions from the repo into Paperclip's directory
-bash .devcontainer/sync-agents.sh
+# Import company + agents from export, update agent-map.json, symlink instructions
+bash .devcontainer/bootstrap-company.sh
 
 echo "postCreateCommand complete — Paperclip running in background (PID $ONBOARD_PID)."

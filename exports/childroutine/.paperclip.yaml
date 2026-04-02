@@ -1,0 +1,24 @@
+schema: "paperclip/v1"
+agents:
+  ceo:
+    role: "ceo"
+    capabilities: "Strategic direction, hiring, delegation, goal setting, and unblocking. Manages the company goals, creates tasks, and assigns work to other agents."
+    adapter:
+      type: "claude_local"
+    permissions:
+      canCreateAgents: true
+  engineer:
+    role: "engineer"
+    capabilities: "Full-stack TypeScript engineer. Owns the Little Helpers Dash codebase. Ships features, fixes bugs, writes tests."
+    adapter:
+      type: "claude_local"
+  sre:
+    role: "devops"
+    capabilities: "Site Reliability Engineer. Owns infrastructure, deployment, and reliability. GCP hosting and Supabase Cloud integration."
+    adapter:
+      type: "claude_local"
+sidebar:
+  agents:
+    - "ceo"
+    - "engineer"
+    - "sre"

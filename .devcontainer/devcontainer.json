@@ -13,5 +13,6 @@
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:latest": {}
   },
-  "postCreateCommand": "bash .devcontainer/post-create.sh"
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "nohup npx paperclipai run > /dev/null 2>&1 & sleep 8 && bash .devcontainer/sync-agents.sh"
 }

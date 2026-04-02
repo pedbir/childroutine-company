@@ -29,14 +29,14 @@ for AGENT_NAME in $(jq -r '.agents | keys[]' "$MAP_FILE"); do
   # Create the target directory if Paperclip hasn't created it yet
   mkdir -p "$DEST_DIR"
 
-  # Remove stale symlinks — files that were deleted from git but still
-  # exist as symlinks in Paperclip's directory
+  # Remove stale files — files that were deleted from git but still
+  # exist in Paperclip's directory (handles both old symlinks and copies)
   for EXISTING in "$DEST_DIR"/*; do
-    [ -L "$EXISTING" ] || continue
-    LINK_TARGET=$(readlink "$EXISTING")
-    if [[ "$LINK_TARGET" == "$SRC_DIR/"* ]] && [ ! -e "$LINK_TARGET" ]; then
+    [ -e "$EXISTING" ] || [ -L "$EXISTING" ] || continue
+    FILENAME=$(basename "$EXISTING")
+    if [ ! -f "$SRC_DIR/$FILENAME" ]; then
       rm "$EXISTING"
-      echo "  removed stale link $(basename "$EXISTING") for $AGENT_NAME"
+      echo "  removed stale $FILENAME for $AGENT_NAME"
     fi
   done
 
@@ -50,8 +50,8 @@ for AGENT_NAME in $(jq -r '.agents | keys[]' "$MAP_FILE"); do
       rm "$DEST_FILE"
     fi
 
-    ln -s "$FILE" "$DEST_FILE"
-    echo "  linked $AGENT_NAME/$FILENAME"
+    cp "$FILE" "$DEST_FILE"
+    echo "  copied $AGENT_NAME/$FILENAME"
   done
 done
 
