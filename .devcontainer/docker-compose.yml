@@ -3,7 +3,7 @@ services:
     image: mcr.microsoft.com/devcontainers/javascript-node:22
     volumes:
       # Workspace
-      - ..:/workspaces/childroutine-company:cached
+      - ..:/workspaces/company:cached
 
       # Paperclip data — persists agent workspaces, storage, secrets
       # (database now lives in the postgres service)

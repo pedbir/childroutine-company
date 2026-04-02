@@ -8,20 +8,37 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-EXPORT_DIR="$REPO_ROOT/exports/childroutine"
 MAP_FILE="$REPO_ROOT/agents/agent-map.json"
 API_BASE="http://127.0.0.1:3100"
 
-if [ ! -f "$EXPORT_DIR/.paperclip.yaml" ]; then
-  echo "ERROR: Export package not found at $EXPORT_DIR"
+# ── Auto-detect export directory (first subdirectory of exports/ with .paperclip.yaml) ──
+EXPORT_DIR=""
+for CANDIDATE in "$REPO_ROOT"/exports/*/; do
+  if [ -f "$CANDIDATE/.paperclip.yaml" ]; then
+    EXPORT_DIR="${CANDIDATE%/}"
+    break
+  fi
+done
+
+if [ -z "$EXPORT_DIR" ]; then
+  echo "ERROR: No export package found in $REPO_ROOT/exports/*/.paperclip.yaml"
   exit 1
 fi
 
+echo "Using export package: $EXPORT_DIR"
+
+# ── Read company name from COMPANY.md frontmatter ────────────────────────────
+if [ -f "$EXPORT_DIR/COMPANY.md" ]; then
+  COMPANY_NAME=$(sed -n 's/^name: *"\(.*\)"/\1/p' "$EXPORT_DIR/COMPANY.md" | head -1)
+fi
+COMPANY_NAME="${COMPANY_NAME:-$(basename "$EXPORT_DIR")}"
+echo "Company name: $COMPANY_NAME"
+
 # ── Check if company already exists ──────────────────────────────────────────
-EXISTING=$(curl -sf "$API_BASE/api/companies" | jq -r '.[] | select(.name == "ChildRoutine") | .id')
+EXISTING=$(curl -sf "$API_BASE/api/companies" | jq -r --arg name "$COMPANY_NAME" '.[] | select(.name == $name) | .id')
 
 if [ -n "$EXISTING" ]; then
-  echo "Company 'ChildRoutine' already exists (id: $EXISTING). Checking agents..."
+  echo "Company '$COMPANY_NAME' already exists (id: $EXISTING). Checking agents..."
   AGENT_COUNT=$(curl -sf "$API_BASE/api/companies/$EXISTING/agents" | jq 'length')
   if [ "$AGENT_COUNT" -gt 0 ]; then
     echo "Company has $AGENT_COUNT agent(s). Skipping import, updating agent-map.json."
@@ -42,7 +59,7 @@ else
   echo "No existing company found. Importing from export package..."
   IMPORT_RESULT=$(npx paperclipai company import "$EXPORT_DIR" \
     --target new \
-    --new-company-name "ChildRoutine" \
+    --new-company-name "$COMPANY_NAME" \
     --include company,agents \
     --yes --json 2>&1)
 

@@ -2,7 +2,7 @@
   "name": "PaperclipAI",
   "dockerComposeFile": "docker-compose.yml",
   "service": "workspace",
-  "workspaceFolder": "/workspaces/childroutine-company",
+  "workspaceFolder": "/workspaces/company",
   "customizations": {
     "vscode": {
       "settings": {

@@ -1,8 +1,8 @@
 {
-  "name": "childroutine-company",
+  "name": "paperclip-company",
   "version": "1.0.0",
   "private": true,
-  "description": "ChildRoutine Company — Paperclip AI Workspace",
+  "description": "Paperclip AI Company Workspace",
   "dependencies": {
     "paperclipai": "latest"
   }
