@@ -51,7 +51,7 @@ if [ -n "$EXISTING" ]; then
       --include agents \
       --collision skip \
       --yes --json 2>&1)
-    echo "$IMPORT_RESULT" | jq '.result.agents // empty' 2>/dev/null || true
+    echo "$IMPORT_RESULT" | jq '.agents // empty' 2>/dev/null || true
     COMPANY_ID="$EXISTING"
   fi
 else
@@ -63,7 +63,7 @@ else
     --include company,agents \
     --yes --json 2>&1)
 
-  COMPANY_ID=$(echo "$IMPORT_RESULT" | jq -r '.result.companyId // empty')
+  COMPANY_ID=$(echo "$IMPORT_RESULT" | jq -r '.company.id // empty')
   if [ -z "$COMPANY_ID" ]; then
     echo "ERROR: Import failed. Output:"
     echo "$IMPORT_RESULT"

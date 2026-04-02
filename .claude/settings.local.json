@@ -1,31 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git -C /workspaces/childroutine-company log --oneline)",
-      "Bash(git -C /workspaces/childroutine-company log --all --pretty=format:\"%H %s\")",
-      "Bash(git -C /workspaces/childroutine-company ls-tree -r HEAD)",
-      "Bash(git:*)",
-      "Bash(find / -maxdepth 4 -name \"package.json\" -path \"*/paperclip*\")",
-      "Bash(find / -maxdepth 3 -type d -name \"paperclip*\")",
-      "Read(//home/**)",
-      "Read(//root/**)",
-      "Read(//opt/**)",
-      "WebFetch(domain:docs.paperclip.ing)",
-      "Bash(pnpm --version)",
-      "Bash(npm list:*)",
-      "Bash(pnpm list:*)",
-      "Bash(npx paperclipai:*)",
-      "Bash(chmod +x:*)",
-      "Bash(bash:*)",
-      "Bash(mkdir -p /home/node/.paperclip/instances/default/companies/d447e052-1c5c-40f8-af99-c767cc8885da/agents/fake-test-id/instructions)",
-      "Bash(npm view:*)",
-      "Bash(npm pack:*)",
-      "Bash(docker search:*)",
-      "Bash(ls -la /workspaces/childroutine-company/.env*)",
-      "Bash(grep:*)",
-      "Bash(sudo chown:*)",
-      "Bash(mkdir -p /home/node/.paperclip/instances/default)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ]
   }
 }
