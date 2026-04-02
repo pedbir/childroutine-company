@@ -13,5 +13,5 @@
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:latest": {}
   },
-  "postCreateCommand": "npx paperclipai onboard --yes && bash .devcontainer/sync-agents.sh"
+  "postCreateCommand": "bash .devcontainer/post-create.sh"
 }
